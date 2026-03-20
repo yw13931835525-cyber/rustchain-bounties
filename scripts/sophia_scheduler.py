@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """SophiaCore Attestation Inspector — Batch Scheduler.
 
 Runs periodic batch inspections of all miners, handles anomaly-triggered

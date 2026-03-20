@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """SophiaCore Attestation Inspector — Database Layer.
 
 SQLite storage for Sophia Elya inspection verdicts, historical fingerprints,

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """SophiaCore Attestation Inspector — Inspection Engine + HTTP API.
 
 AI-powered validation layer where Sophia Elya (Elyan-class edge LLM)

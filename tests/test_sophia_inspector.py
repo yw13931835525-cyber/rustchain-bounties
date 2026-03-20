@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """Comprehensive tests for SophiaCore Attestation Inspector.
 
 Covers:

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """SophiaCore Attestation Inspector — Admin Dashboard.
 
 Self-contained HTML+CSS+JS dashboard for human spot-checks of
