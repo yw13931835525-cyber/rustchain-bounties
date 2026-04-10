@@ -1,0 +1,27 @@
+name: 'RTC PR Reward'
+description: 'Automatically award RTC tokens when a PR is merged. GitHub Marketplace-ready.'
+branding:
+  icon: 'award'
+  color: 'purple'
+inputs:
+  node-url:
+    description: 'RustChain node URL'
+    required: false
+    default: 'https://50.28.86.131'
+  amount:
+    description: 'RTC amount per merged PR'
+    required: false
+    default: '5'
+  wallet-from:
+    description: 'Project wallet name for disbursing rewards'
+    required: true
+  admin-key:
+    description: 'Admin key for node (use GitHub Secret)'
+    required: false
+  dry-run:
+    description: 'Dry-run mode — posts comment without sending RTC'
+    required: false
+    default: 'false'
+runs:
+  using: 'node16'
+  main: 'entrypoint.js'
