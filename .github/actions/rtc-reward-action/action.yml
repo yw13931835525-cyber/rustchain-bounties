@@ -1,0 +1,73 @@
+name: "RTC Reward Action"
+description: "Automatically awards RTC tokens to contributors when a PR is merged"
+author: "RustChain RTC"
+
+inputs:
+  node-url:
+    description: "RTC node RPC URL"
+    required: false
+    type: string
+    default: "https://50.28.86.131"
+  amount:
+    description: "Amount of RTC to award per merge"
+    required: false
+    type: string
+    default: "5"
+  wallet-from:
+    description: "Sender wallet identifier (name or address)"
+    required: true
+    type: string
+  admin-key:
+    description: "Admin private key for signing transactions"
+    required: true
+    type: string
+  pr-number:
+    description: "PR number to process (defaults to current PR)"
+    required: false
+    type: string
+    default: ""
+  dry-run:
+    description: "Enable dry-run mode (no actual transaction)"
+    required: false
+    type: string
+    default: "false"
+  min-body-length:
+    description: "Minimum PR body length required to qualify"
+    required: false
+    type: string
+    default: "20"
+  repo-token:
+    description: "GitHub token for API calls"
+    required: true
+    type: string
+
+outputs:
+  recipient:
+    description: "EVM wallet address of the contributor"
+    value: ${{ steps.reward.outputs.recipient }}
+  tx-hash:
+    description: "Transaction hash of the RTC transfer"
+    value: ${{ steps.reward.outputs.tx_hash }}
+  amount:
+    description: "Amount of RTC transferred"
+    value: ${{ steps.reward.outputs.amount }}
+  rewarded:
+    description: "Whether the reward was successfully processed"
+    value: ${{ steps.reward.outputs.rewarded }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: reward
+      shell: bash
+      env:
+        INPUT_NODE_URL: ${{ inputs.node-url }}
+        INPUT_AMOUNT: ${{ inputs.amount }}
+        INPUT_WALLET_FROM: ${{ inputs.wallet-from }}
+        INPUT_ADMIN_KEY: ${{ inputs.admin-key }}
+        INPUT_PR_NUMBER: ${{ inputs.pr-number }}
+        INPUT_DRY_RUN: ${{ inputs.dry-run }}
+        INPUT_MIN_BODY_LENGTH: ${{ inputs.min-body-length }}
+        INPUT_REPO_TOKEN: ${{ inputs.repo-token }}
+      run: ${{ github.action_path }}/entrypoint.sh
+      working-directory: ${{ github.workspace }}
