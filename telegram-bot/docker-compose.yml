@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  rustchain-telegram-bot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      RPC_URL: "${RPC_URL:-https://50.28.86.131}"
