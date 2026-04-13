@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upstream Contributions | Elyan Labs</title>
+  <meta name="description" content="Elyan Labs' 44+ merged upstream contributions to major open-source projects including OpenSSL, libdragon, capstone, and more.">
+  <meta name="keywords" content="open source contributions, upstream patches, security fixes, PowerPC, POWER8, OpenSSL, Ghidra, vLLM">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 3rem; }
+    .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, #00d4ff, #7b2cbf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header p { color: #888; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      min-width: 150px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-card .number { font-size: 2.5rem; font-weight: bold; color: #00d4ff; }
+    .stat-card .label { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .project-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,212,255,0.2);
+    }
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .project-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .project-name { flex: 1; }
+    .project-name h3 { font-size: 1.2rem; margin-bottom: 0.2rem; }
+    .project-name .status {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .status-merged { background: #10b981; color: #fff; }
+    .status-review { background: #f59e0b; color: #fff; }
+    .project-details {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    .project-details span { display: flex; align-items: center; gap: 0.3rem; }
+    .pr-list { margin-top: 0.5rem; }
+    .pr-list h4 { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pr-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease;
+    }
+    .pr-item:hover { background: rgba(255,255,255,0.08); }
+    .pr-label {
+      background: #3b82f6;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .pr-desc { flex: 1; }
+    .impact-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(0,212,255,0.2);
+      color: #00d4ff;
+      border-radius: 4px;
+    }
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    @media (max-width: 768px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .stats { gap: 1rem; }
+      .header h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🏆 Upstream Contributions</h1>
+      <p>Elyan Labs has made 44+ merged contributions to major open-source projects, improving security, performance, and portability across the tech ecosystem.</p>
+    </header>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="number">44+</div>
+        <div class="label">Contributions</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">10+</div>
+        <div class="label">Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">26K+</div>
+        <div class="label">Repository Stars</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">5</div>
+        <div class="label">Release Branches</div>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+      <!-- OpenSSL -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🔒</div>
+          <div class="project-name">
+            <h3>OpenSSL</h3>
+            <span class="status status-merged">Merged to Master</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 26K stars</span>
+          <span>🔐 Security fixes</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="https://github.com/openssl/openssl/pull/30437" class="pr-item" target="_blank">
+            <span class="pr-label">#30437</span>
+            <span class="pr-desc">PowerPC AES-GCM security fixes</span>
+            <span class="impact-badge">Master + 5 branches</span>
+          </a>
+          <a href="https://github.com/openssl/openssl/pull/30452" class="pr-item" target="_blank">
+            <span class="pr-label">#30452</span>
+            <span class="pr-desc">Additional PowerPC optimizations</span>
+            <span class="impact-badge">Master + 4 branches</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- libdragon -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🎮</div>
+          <div class="project-name">
+            <h3>libdragon</h3>
+            <span class="status status-merged">Merged</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>🎮 N64 homebrew SDK</span>
+          <span>🍎 macOS support</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="https://github.com/libdragon/libdragon/pull/849" class="pr-item" target="_blank">
+            <span class="pr-label">#849</span>
+            <span class="pr-desc">N64 homebrew SDK macOS build fix</span>
+            <span class="impact-badge">Cross-platform</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- capstone -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🔬</div>
+          <div class="project-name">
+            <h3>capstone</h3>
+            <span class="status status-merged">Merged to Master</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 8K stars</span>
+          <span>📐 Disassembly framework</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="https://github.com/capstone-engine/capstone/pull/2889" class="pr-item" target="_blank">
+            <span class="pr-label">#2889</span>
+            <span class="pr-desc">Multi-arch disassembly portability fix</span>
+            <span class="impact-badge">IDA Pro, radare2, Ghidra</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- c-blosc2 -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">📦</div>
+          <div class="project-name">
+            <h3>c-blosc2</h3>
+            <span class="status status-merged">Merged</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>🐼 Used by pandas/zarr/PyTables</span>
+          <span>⚡ VSX optimizations</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="https://github.com/Blosc/c-blosc2/pull/723" class="pr-item" target="_blank">
+            <span class="pr-label">#723</span>
+            <span class="pr-desc">PowerPC VSX compression fixes</span>
+            <span class="impact-badge">pandas performance</span>
+          </a>
+          <a href="https://github.com/Blosc/c-blosc2/pull/725" class="pr-item" target="_blank">
+            <span class="pr-label">#725</span>
+            <span class="pr-desc">Additional VSX optimizations</span>
+            <span class="impact-badge">Compression speed</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- hacl-star -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🔐</div>
+          <div class="project-name">
+            <h3>hacl-star</h3>
+            <span class="status status-merged">Merged</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>🎓 Microsoft formal-verified crypto</span>
+          <span>⚡ AltiVec support</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="https://github.com/hacl-star/hacl/pull/1068" class="pr-item" target="_blank">
+            <span class="pr-label">#1068</span>
+            <span class="pr-desc">AltiVec fix for PowerPC</span>
+            <span class="impact-badge">Verified crypto</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- wolfSSL -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🦁</div>
+          <div class="project-name">
+            <h3>wolfSSL</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 2K stars</span>
+          <span>⚡ POWER8 hardware AES</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PR</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#9932</span>
+            <span class="pr-desc">POWER8 hardware AES (13-20x faster)</span>
+            <span class="impact-badge">CLA Signed</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- NSA Ghidra -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🕵️</div>
+          <div class="project-name">
+            <h3>NSA Ghidra</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 53K stars</span>
+          <span>🔍 Reverse engineering</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PR</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#9036</span>
+            <span class="pr-desc">e200 VLE PowerPC reverse engineering</span>
+            <span class="impact-badge">Security research</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- vLLM -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🤖</div>
+          <div class="project-name">
+            <h3>vLLM</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 30K stars</span>
+          <span>⚡ LLM inference</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PR</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#37586</span>
+            <span class="pr-desc">IBM POWER8 CPU backend</span>
+            <span class="impact-badge">LLM performance</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- CPython -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🐍</div>
+          <div class="project-name">
+            <h3>CPython</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 65K stars</span>
+          <span>⚡ Python runtime</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PR</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#146118</span>
+            <span class="pr-desc">BLAKE2 SIMD128 on POWER8</span>
+            <span class="impact-badge">Hash performance</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- PyTorch -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🔥</div>
+          <div class="project-name">
+            <h3>PyTorch</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 85K stars</span>
+          <span>🧠 Deep learning</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PR</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#179619</span>
+            <span class="pr-desc">POWER8 Kineto guard</span>
+            <span class="impact-badge">Training stability</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- LLVM -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">⚙️</div>
+          <div class="project-name">
+            <h3>LLVM</h3>
+            <span class="status status-review">In Review</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>⭐ 100K+ stars</span>
+          <span>🔧 Compiler infrastructure</span>
+        </div>
+        <div class="pr-list">
+          <h4>Upcoming PRs</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#188558, #188373, #187315, #187322</span>
+            <span class="pr-desc">4 PowerPC fixes</span>
+            <span class="impact-badge">Compiler optimization</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- libdeflate -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">📦</div>
+          <div class="project-name">
+            <h3>libdeflate</h3>
+            <span class="status status-merged">Merged</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>📦 Deflate compression</span>
+          <span>⚡ Performance</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">Multiple</span>
+            <span class="pr-desc">Compression improvements</span>
+            <span class="impact-badge">Speed & quality</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- trajectly -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-logo">🎯</div>
+          <div class="project-name">
+            <h3>trajectly</h3>
+            <span class="status status-merged">Merged</span>
+          </div>
+        </div>
+        <div class="project-details">
+          <span>🔀 Data transformation</span>
+          <span>📊 12 PRs merged</span>
+        </div>
+        <div class="pr-list">
+          <h4>Merged PRs</h4>
+          <a href="#" class="pr-item">
+            <span class="pr-label">#12+ PRs</span>
+            <span class="pr-desc">Data pipeline improvements</span>
+            <span class="impact-badge">12 contributions</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p><strong>Elyan Labs</strong> — Building the future of open source since 2023</p>
+      <p>44+ contributions · 10+ projects · PowerPC expert</p>
+      <p style="margin-top: 1rem;">
+        <a href="https://github.com/Scottcjn" style="color: #00d4ff; text-decoration: none; margin: 0 0.5rem;">GitHub</a> ·
+        <a href="https://discord.gg/VqVVS2CW9Q" style="color: #00d4ff; text-decoration: none; margin: 0 0.5rem;">Discord</a> ·
+        <a href="/about" style="color: #00d4ff; text-decoration: none; margin: 0 0.5rem;">About Us</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
