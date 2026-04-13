@@ -1,0 +1,17 @@
+# Robots.txt for elyanlabs.ai
+# Allows all crawlers to access most of the site
+
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /dashboard/
+Disallow: /api/private/
+
+# Sitemap location
+Sitemap: https://elyanlabs.ai/sitemap.xml
+
+# Crawl delay (optional - be nice to servers)
+Crawl-delay: 1
