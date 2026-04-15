@@ -1,63 +1,74 @@
-# RustChain Development Tools — VS Code Extension
+# RustChain Development Tools
 
-A VS Code extension for [RustChain](https://github.com/Scottcjn/Rustchain) developers. Provides RTC balance monitoring, config file highlighting, and code snippets for the RIP-200 Proof-of-Attestation ecosystem.
-
-Bounty: [#1619](https://github.com/Scottcjn/rustchain-bounties/issues/1619)
+A VS Code extension for RustChain development — providing real-time wallet monitoring, miner status, epoch countdown, and bounty browsing.
 
 ## Features
 
-### RTC Balance Status Bar
-- Displays your current RTC wallet balance in the VS Code status bar.
-- Auto-refreshes on a configurable interval (default 120 s).
-- Click the status-bar item to set or change your miner/wallet ID.
+### Status Bar Items
 
-### Config File Highlighting
-- Syntax highlighting for `rustchain.toml`, `rustchain.yaml`, and `rustchain.yml`.
-- Highlights RustChain-specific keywords (`miner_id`, `attestation`, `epoch`, `RTC`, `RIP-200`, hardware tiers, etc.).
+| Item | Position | Description |
+|------|----------|-------------|
+| **RTC Balance** | Right | Shows your RTC wallet balance. Click to set wallet ID. |
+| **Miner Status** | Right | Green/red indicator — shows whether your miner is actively attesting. |
+| **Epoch Timer** | Left | Live countdown to the next RustChain epoch (mm:ss format). |
 
-### Code Snippets
-- **Python** — balance check, health check, epoch info, miner listing, attestation scaffold, epoch enrollment, full miner boilerplate.
-- **Shell** — curl one-liners for every API endpoint, systemd unit template.
-- **RustChain Config** — node config scaffold, miner section, Ergo anchoring section.
+### Bounty Browser (Sidebar)
 
-All snippet prefixes start with `rtc-` for easy discoverability.
+Open the **RustChain Bounties** view in the Activity Bar to browse open bounties from the [rustchain-bounties](https://github.com/Scottcjn/rustchain-bounties) repository.
+
+- Click any bounty to open it in your browser.
+- Use **Refresh** to re-fetch the latest bounty list.
+- Use **Claim Bounty** to open a pre-filled PR template for the selected issue.
 
 ### Commands
+
 | Command | Description |
 |---------|-------------|
-| `RustChain: Refresh RTC Balance` | Manually refresh the balance display. |
-| `RustChain: Set Miner/Wallet ID` | Configure which wallet to track. |
-| `RustChain: Check Node Health` | Show node health + epoch info in a dialog. |
+| `RustChain: Refresh RTC Balance` | Manually refresh the balance status bar |
+| `RustChain: Refresh Miner Status` | Manually refresh the miner status indicator |
+| `RustChain: Set Miner/Wallet ID` | Configure your wallet/miner ID |
+| `RustChain: Check Node Health` | Show node health and epoch info |
+| `RustChain: Refresh Bounty List` | Refresh the bounty browser |
+| `RustChain: Claim Bounty` | Claim a bounty (opens PR template) |
 
 ## Configuration
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `rustchain.nodeUrl` | `https://50.28.86.131` | RustChain node URL. |
-| `rustchain.minerId` | `""` | Your miner/wallet ID. |
-| `rustchain.balanceRefreshInterval` | `120` | Refresh interval in seconds (min 30). |
-| `rustchain.showBalance` | `true` | Show/hide the balance status-bar item. |
-| `rustchain.rejectUnauthorized` | `false` | Enforce TLS cert validation (default node uses self-signed). |
+| `rustchain.nodeUrl` | `https://50.28.86.131` | RustChain node URL |
+| `rustchain.minerId` | _(empty)_ | Your miner/wallet ID (e.g. `hebeigaoruan-rtc`) |
+| `rustchain.balanceRefreshInterval` | `120` seconds | Balance refresh rate |
+| `rustchain.minerRefreshInterval` | `60` seconds | Miner status refresh rate |
+| `rustchain.showBalance` | `true` | Toggle balance display |
+| `rustchain.rejectUnauthorized` | `false` | Enforce TLS cert validation |
 
-## Development
+## Requirements
 
-```bash
-cd vscode-extension
-npm install
-npm run compile
-# Press F5 in VS Code to launch the Extension Development Host
+- VS Code 1.80.0 or later
+
+## Extension Architecture
+
+```
+src/
+  extension.ts       — Entry point, wires up all components
+  rustchainApi.ts    — HTTP client for RustChain node & GitHub API
+  balanceStatusBar.ts — RTC balance status bar item
+  minerStatus.ts     — Miner attesting status (green/red)
+  epochTimer.ts      — Live epoch countdown
+  nodeHealth.ts      — Node health check command
+  bountyBrowser.ts   — Sidebar bounty tree view
 ```
 
-## Testing
+## API Endpoints Used
 
-```bash
-# TypeScript tests (requires VS Code test runner)
-npm test
+- `GET /wallet/balance?miner_id=<id>` — RTC wallet balance
+- `GET /api/miners` — Miner list with attesting status
+- `GET /epoch` — Current epoch info
+- `GET /health` — Node health
+- `GET api.github.com/repos/Scottcjn/rustchain-bounties/issues` — Open bounties
 
-# Python structural tests (from repo root)
-python -m pytest tests/test_vscode_extension.py -v
-```
+## Bounty
 
-## License
+This extension was developed for [RustChain Bounty #2868](https://github.com/Scottcjn/rustchain-bounties/issues/2868).
 
-MIT — see the repository root `LICENSE` or individual SPDX headers.
+**Wallet:** `hebeigaoruan-rtc`

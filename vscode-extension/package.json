@@ -1,8 +1,8 @@
 {
   "name": "rustchain-dev",
   "displayName": "RustChain Development Tools",
-  "description": "VS Code extension for RustChain development — RTC balance status bar, config highlighting, and code snippets.",
-  "version": "0.1.0",
+  "description": "VS Code extension for RustChain development — RTC balance, miner status, epoch timer, bounty browser, config highlighting, and code snippets.",
+  "version": "0.2.0",
   "publisher": "rustchain",
   "license": "MIT",
   "repository": {
@@ -22,12 +22,11 @@
     "rtc",
     "blockchain",
     "proof-of-attestation",
-    "mining"
+    "mining",
+    "bounty"
   ],
   "activationEvents": [
-    "onLanguage:rustchain-config",
-    "workspaceContains:**/rustchain.toml",
-    "workspaceContains:**/rustchain.yaml"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -42,13 +41,19 @@
         "rustchain.minerId": {
           "type": "string",
           "default": "",
-          "description": "Your miner/wallet ID for balance display (e.g. 'my-miner-name')."
+          "description": "Your miner/wallet ID for balance & attesting display (e.g. 'hebeigaoruan-rtc')."
         },
         "rustchain.balanceRefreshInterval": {
           "type": "number",
           "default": 120,
           "minimum": 30,
           "description": "How often (in seconds) to refresh the RTC balance in the status bar."
+        },
+        "rustchain.minerRefreshInterval": {
+          "type": "number",
+          "default": 60,
+          "minimum": 15,
+          "description": "How often (in seconds) to refresh the miner attesting status."
         },
         "rustchain.showBalance": {
           "type": "boolean",
@@ -62,6 +67,29 @@
         }
       }
     },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rustchain.bountyBrowser",
+          "title": "RustChain Bounties",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "rustchain.bountyBrowser": [
+        {
+          "id": "rustchain.bountyList",
+          "name": "Open Bounties"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "rustchain.bountyList",
+        "contents": "No open bounties found.\n\n[Refresh Bounties](command:rustchain.refreshBounties)"
+      }
+    ],
     "languages": [
       {
         "id": "rustchain-config",
@@ -109,14 +137,40 @@
         "title": "RustChain: Refresh RTC Balance"
       },
       {
+        "command": "rustchain.refreshMinerStatus",
+        "title": "RustChain: Refresh Miner Status"
+      },
+      {
         "command": "rustchain.setMinerId",
         "title": "RustChain: Set Miner/Wallet ID"
       },
       {
         "command": "rustchain.checkNodeHealth",
         "title": "RustChain: Check Node Health"
+      },
+      {
+        "command": "rustchain.refreshBounties",
+        "title": "RustChain: Refresh Bounty List"
+      },
+      {
+        "command": "rustchain.claimBounty",
+        "title": "RustChain: Claim Bounty"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "rustchain.refreshBounties",
+          "when": "view == rustchain.bountyList",
+          "group": "navigation"
+        },
+        {
+          "command": "rustchain.claimBounty",
+          "when": "view == rustchain.bountyList",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

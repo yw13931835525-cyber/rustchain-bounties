@@ -36,6 +36,17 @@ export interface EpochInfo {
     slot: number;
 }
 
+export interface MinerInfo {
+    miner_id: string;
+    is_attesting: boolean;
+    last_attested_slot?: number;
+    [key: string]: unknown;
+}
+
+export interface MinersResponse {
+    miners: MinerInfo[];
+}
+
 // ---------------------------------------------------------------------------
 // API client
 // ---------------------------------------------------------------------------
@@ -112,4 +123,19 @@ export async function fetchHealth(): Promise<NodeHealth> {
 
 export async function fetchEpoch(): Promise<EpochInfo> {
     return httpGet<EpochInfo>("/epoch");
+}
+
+export async function fetchMiners(): Promise<MinersResponse> {
+    return httpGet<MinersResponse>("/api/miners");
+}
+
+export async function fetchMinerStatus(minerId: string): Promise<boolean | null> {
+    if (!minerId) return null;
+    try {
+        const resp = await fetchMiners();
+        const miner = resp.miners.find((m) => m.miner_id === minerId);
+        return miner?.is_attesting ?? null;
+    } catch {
+        return null;
+    }
 }
