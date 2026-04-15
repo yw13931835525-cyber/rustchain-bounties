@@ -1,0 +1,128 @@
+name: "RTC Reward Action"
+description: "Reusable GitHub Action to automatically award RTC tokens when PRs are merged"
+author: "RustChain"
+
+inputs:
+  node-url:
+    description: "RustChain BCOS node API URL"
+    required: true
+    default: "https://50.28.86.131"
+  amount:
+    description: "Amount of RTC to award per merged PR"
+    required: true
+    default: "5"
+  wallet-name:
+    description: "Sender wallet name on RustChain"
+    required: true
+  admin-key:
+    description: "Admin private key for signing transactions"
+    required: true
+  dry-run:
+    description: "Enable dry-run mode (no actual transaction)"
+    required: false
+    default: "false"
+
+outputs:
+  tx-hash:
+    description: "Transaction hash of the reward payment"
+    value: ${{ steps.payout.outputs.tx-hash }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Check if PR was merged"
+      id: check-merge
+      shell: bash
+      run: |
+        if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
+          echo "not_merged=true" >> $GITHUB_OUTPUT
+          echo "⏭️  PR not merged — skipping reward"
+        else
+          echo "not_merged=false" >> $GITHUB_OUTPUT
+          echo "✅ PR merged — processing reward"
+        fi
+
+    - name: "Extract contributor wallet from PR body or file"
+      if: steps.check-merge.outputs.not_merged != 'true'
+      id: extract-wallet
+      shell: bash
+      run: |
+        BODY="${{ github.event.pull_request.body }}"
+        WALLET=""
+        
+        # Try PR body
+        if echo "$BODY" | grep -qi "wallet"; then
+          WALLET=$(echo "$BODY" | grep -i "wallet" | head -1 | sed 's/.*wallet[:=]\s*//i' | awk '{print $1}')
+        fi
+        
+        # Fallback to contributor username as wallet name
+        if [[ -z "$WALLET" ]]; then
+          WALLET="${{ github.event.pull_request.user.login }}"
+        fi
+        
+        echo "wallet=$WALLET" >> $GITHUB_OUTPUT
+        echo "📦 Contributor wallet: $WALLET"
+
+    - name: "Dry-run: simulate reward"
+      if: steps.check-merge.outputs.not_merged != 'true' && inputs.dry-run == 'true'
+      shell: bash
+      run: |
+        echo "🔍 DRY RUN — no real transaction"
+        echo "   Would pay ${{ inputs.amount }} RTC to ${{ steps.extract-wallet.outputs.wallet }}"
+        echo "   From wallet: ${{ inputs.wallet-name }}"
+        echo "   Node: ${{ inputs.node-url }}"
+        echo "tx-hash=DRY_RUN_$(date +%s)" >> $GITHUB_OUTPUT
+
+    - name: "Award RTC on merge"
+      if: steps.check-merge.outputs.not_merged != 'true' && inputs.dry-run != 'true'
+      id: payout
+      shell: bash
+      run: |
+        NODE="${{ inputs.node-url }}"
+        AMOUNT="${{ inputs.amount }}"
+        WALLET="${{ steps.extract-wallet.outputs.wallet }}"
+        ADMIN_KEY="${{ inputs.admin-key }}"
+        PR_URL="${{ github.event.pull_request.html_url }}"
+        
+        echo "🔵 Paying $AMOUNT RTC to wallet: $WALLET"
+        
+        # Build transaction request
+        TX_DATA=$(cat <<EOF
+        {
+          "wallet_name": "${{ inputs.wallet-name }}",
+          "to_wallet": "$WALLET",
+          "amount": $AMOUNT,
+          "private_key": "$ADMIN_KEY",
+          "memo": "PR reward: $PR_URL"
+        }
+EOF
+)
+        
+        # Send transaction
+        RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$NODE/api/wallet/send" \
+          -H "Content-Type: application/json" \
+          -d "$TX_DATA")
+        
+        HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+        BODY=$(echo "$RESPONSE" | sed '$d')
+        
+        if [[ "$HTTP_CODE" == "200" || "$HTTP_CODE" == "201" ]]; then
+          TX_HASH=$(echo "$BODY" | jq -r '.tx_hash // .hash // "unknown"' 2>/dev/null || echo "$BODY")
+          echo "tx-hash=$TX_HASH" >> $GITHUB_OUTPUT
+          echo "✅ Payment sent! TX: $TX_HASH"
+          
+          # Post comment on PR
+          COMMENT="🎉 Reward sent! **$AMOUNT RTC** paid to wallet \`$WALLET\` for merged PR. TX: \`$TX_HASH\`"
+          curl -s -X POST "$NODE/api/comment" \
+            -H "Content-Type: application/json" \
+            -d "{\"pr_url\": \"$PR_URL\", \"comment\": $(echo "$COMMENT" | jq -Rs .)}" \
+            || echo "Comment post skipped (endpoint may not exist)"
+        else
+          echo "❌ Payment failed (HTTP $HTTP_CODE): $BODY"
+          echo "tx-hash=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+branding:
+  color: purple
+  icon: "gift"
